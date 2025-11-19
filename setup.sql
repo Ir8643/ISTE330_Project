@@ -5,26 +5,26 @@ USE Abstracts;
 -- 1. Create Independent Tables (No Foreign Keys) first
 
 CREATE TABLE `account` (
-  `account_id` int NOT NULL,
+  `account_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(45),
   `password` varchar(50),
   PRIMARY KEY (`account_id`)
 );
 
 CREATE TABLE `College` (
-  `college_id` int NOT NULL,
+  `college_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45),
   PRIMARY KEY (`college_id`)
 );
 
 CREATE TABLE `interests` (
-  `interest_id` int NOT NULL,
+  `interest_id` int NOT NULL AUTO_INCREMENT,
   `keyword` varchar(25),
   PRIMARY KEY (`interest_id`)
 );
 
 CREATE TABLE `abstract` (
-  `abs_id` int NOT NULL,
+  `abs_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(100),
   `abstract` varchar(800),
   `authors` varchar(40),
@@ -34,7 +34,7 @@ CREATE TABLE `abstract` (
 -- 2. Create Dependent Tables (Tables with Foreign Keys)
 
 CREATE TABLE `guest` (
-  `guest_id` int NOT NULL,
+  `guest_id` int NOT NULL AUTO_INCREMENT,
   `fname` varchar(45),
   `lname` varchar(45),
   `email` varchar(50),
@@ -44,7 +44,7 @@ CREATE TABLE `guest` (
 );
 
 CREATE TABLE `Major` (
-  `major_id` int NOT NULL,
+  `major_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45),
   `college_id` int,
   PRIMARY KEY (`major_id`),
@@ -52,7 +52,7 @@ CREATE TABLE `Major` (
 );
 
 CREATE TABLE `faculty` (
-  `fac_id` int NOT NULL,
+  `fac_id` int NOT NULL AUTO_INCREMENT,
   `fname` varchar(45),
   `lname` varchar(45),
   `building_no` int,
@@ -66,7 +66,7 @@ CREATE TABLE `faculty` (
 );
 
 CREATE TABLE `student` (
-  `stu_id` int NOT NULL,
+  `stu_id` int NOT NULL AUTO_INCREMENT,
   `fname` varchar(45),
   `lname` varchar(45),
   `email` varchar(50),
