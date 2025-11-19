@@ -11,7 +11,7 @@ CREATE TABLE `account` (
   PRIMARY KEY (`account_id`)
 );
 
-CREATE TABLE `College` (
+CREATE TABLE `college` (
   `college_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45),
   PRIMARY KEY (`college_id`)
@@ -43,7 +43,7 @@ CREATE TABLE `guest` (
   FOREIGN KEY (`account_id`) REFERENCES `account`(`account_id`)
 );
 
-CREATE TABLE `Major` (
+CREATE TABLE `major` (
   `major_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45),
   `college_id` int,
@@ -86,7 +86,7 @@ CREATE TABLE `faculty_interest` (
   FOREIGN KEY (`interest_id`) REFERENCES `interests`(`interest_id`)
 );
 
-CREATE TABLE `facult_abstracts` (
+CREATE TABLE `faculty_abstracts` (
   `prof_id` int NOT NULL,
   `abs_id` int NOT NULL,
   PRIMARY KEY (`prof_id`, `abs_id`),
