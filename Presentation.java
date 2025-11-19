@@ -31,6 +31,7 @@ public class Presentation {
                     System.out.println("Invalid choice. Please enter 1 or 2.");
             }
         } while (choice != 2);
+        s.close();
     }
 
     public static void main(String[] args) {
