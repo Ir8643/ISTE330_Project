@@ -1,3 +1,13 @@
+// Group 3
+// ISTE 330 - Database Management Systems
+// RIT Research Database System
+// Team Members:
+//  - Innocenzio Rizzuto
+//  - Sanjay Charitesh Makam
+//  - Joseph McEnroe
+//  - Mohamed Abdullah Najumudeen
+//  - Jake Paczkowski
+//  - Muzammilkhan Pathan
 package ISTE330_Project;
 
 import java.sql.*;
@@ -73,6 +83,33 @@ public int loginFaculty(String username, String password) {
         }
 
         return rs.getInt("fac_id"); 
+
+    } catch (SQLException e) {
+        System.out.println("Login error: " + e.getMessage());
+        return -3;
+    }
+}
+
+public int loginStudent(String username, String password) {
+    String sql = "SELECT a.account_id, a.password, s.stu_id " +
+                 "FROM account a JOIN student s ON a.account_id = s.account_id " +
+                 "WHERE a.username = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+
+        if (!rs.next()) {
+            return -1;
+        }
+
+        String storedHash = rs.getString("password");
+        String entered = hashPassword(password);
+
+        if (!storedHash.equals(entered)) {
+            return -2; 
+        }
+
+        return rs.getInt("stu_id"); 
 
     } catch (SQLException e) {
         System.out.println("Login error: " + e.getMessage());

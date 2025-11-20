@@ -1,3 +1,13 @@
+// Group 3
+// ISTE 330 - Database Management Systems
+// RIT Research Database System
+// Team Members:
+//  - Innocenzio Rizzuto
+//  - Sanjay Charitesh Makam
+//  - Joseph McEnroe
+//  - Mohamed Abdullah Najumudeen
+//  - Jake Paczkowski
+//  - Muzammilkhan Pathan
 package ISTE330_Project;
 
 import java.util.Scanner;
@@ -94,9 +104,18 @@ public class Presentation {
 
     //  Student Menu: Add interests, Search Faculty
     private static void studentFlow() {
-        System.out.print("\nEnter Student ID (simulate login): ");
-        int stuId = Integer.parseInt(s.nextLine());
+        System.out.print("\nEnter Student Username: ");
+        String user = s.nextLine();
 
+        System.out.print("Enter Password: ");
+        String pass = s.nextLine();
+
+        int stuId = dl.loginStudent(user, pass);
+
+        if (stuId < 1) {
+            System.out.println("Login failed.");
+            return;
+}
         int choice;
         do {
             System.out.println("\n--- STUDENT MENU ---");
