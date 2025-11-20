@@ -53,7 +53,7 @@ public class Presentation {
         s.close();
     }
 
-    //  Faculty Menu: Insert abstracts, Search Students
+    //  Faculty Menu
     private static void facultyFlow() {
        System.out.print("\nEnter Faculty Username: ");
         String user = s.nextLine();
@@ -66,15 +66,16 @@ public class Presentation {
         if (facId < 1) {
             System.out.println("Login failed.");
             return;
-}
-
+        }
 
         int choice;
         do {
             System.out.println("\n--- FACULTY MENU ---");
-            System.out.println("1. Upload Abstract from File");
+            System.out.println("1. Upload New Abstract");
             System.out.println("2. Search Students by Interest");
-            System.out.println("3. Return to Main Menu");
+            System.out.println("3. View/Edit My Abstracts");
+            System.out.println("4. View/Edit My Interests");
+            System.out.println("5. Return to Main Menu");
             System.out.print("Enter choice: ");
             try { choice = Integer.parseInt(s.nextLine()); } catch (Exception e) { choice = -1; }
 
@@ -84,10 +85,10 @@ public class Presentation {
                     String title = s.nextLine();
                     System.out.print("Enter Authors: ");
                     String authors = s.nextLine();
-                    System.out.print("Enter full file path to text file: ");
-                    String path = s.nextLine();
+                    System.out.print("Enter abstract: ");
+                    String abstracts = s.nextLine();
                     
-                    int newId = dl.insertAbstractFromFile(facId, title, authors, path);
+                    int newId = dl.insertAbstractFromFile(facId, title, authors, abstracts);
                     if(newId > 0) System.out.println("Success! Abstract ID created: " + newId);
                     else System.out.println("Failed to upload abstract.");
                     break;
@@ -96,13 +97,52 @@ public class Presentation {
                     String key = s.nextLine();
                     System.out.println(dl.searchStudentsByInterest(key));
                     break;
-                case 3: break;
+                case 3:
+                    System.out.println("\n--- YOUR ABSTRACTS ---");
+                    System.out.println(dl.getFacultyOwnAbstracts(facId));
+                    System.out.print("To EDIT, enter Abstract ID (or 0 to go back): ");
+                    try {
+                        int absId = Integer.parseInt(s.nextLine());
+                        if(absId > 0) {
+                            System.out.print("Enter New Title: ");
+                            String nTitle = s.nextLine();
+                            System.out.print("Enter New Authors: ");
+                            String nAuth = s.nextLine();
+                            System.out.print("Enter New Abstract Content: ");
+                            String nCont = s.nextLine();
+                            if(dl.updateAbstract(facId, absId, nTitle, nAuth, nCont))
+                                System.out.println("Abstract updated successfully.");
+                            else
+                                System.out.println("Update failed (ID might not be yours).");
+                        }
+                    } catch(Exception e) { System.out.println("Invalid Input."); }
+                    break;
+                case 4:
+                    System.out.println("\n--- YOUR INTERESTS ---");
+                    System.out.println(dl.getFacultyInterests(facId));
+                    System.out.println("1. Add Interest");
+                    System.out.println("2. Remove Interest");
+                    System.out.println("3. Back");
+                    System.out.print("Action: ");
+                    int act = -1;
+                    try { act = Integer.parseInt(s.nextLine()); } catch(Exception e){}
+                    if(act == 1) {
+                        System.out.print("Enter interest to ADD: ");
+                        if(dl.addFacultyInterest(facId, s.nextLine())) System.out.println("Added.");
+                        else System.out.println("Failed.");
+                    } else if (act == 2) {
+                        System.out.print("Enter interest to REMOVE: ");
+                        if(dl.removeFacultyInterest(facId, s.nextLine())) System.out.println("Removed.");
+                        else System.out.println("Failed or not found.");
+                    }
+                    break;
+                case 5: break;
                 default: System.out.println("Invalid.");
             }
-        } while (choice != 3);
+        } while (choice != 5);
     }
 
-    //  Student Menu: Add interests, Search Faculty
+    //  Student Menu
     private static void studentFlow() {
         System.out.print("\nEnter Student Username: ");
         String user = s.nextLine();
@@ -115,19 +155,19 @@ public class Presentation {
         if (stuId < 1) {
             System.out.println("Login failed.");
             return;
-}
+        }
         int choice;
         do {
             System.out.println("\n--- STUDENT MENU ---");
             System.out.println("1. Add Research Interest");
-            System.out.println("2. Search Faculty (Abstracts & Interests)");
-            System.out.println("3. Return to Main Menu");
+            System.out.println("2. Search Faculty (Keywords/Abstracts/Interests)");
+            System.out.println("3. View/Modify My Interests");
+            System.out.println("4. Return to Main Menu");
             System.out.print("Enter choice: ");
             try { choice = Integer.parseInt(s.nextLine()); } catch (Exception e) { choice = -1; }
 
             switch(choice) {
                 case 1:
-                    // [cite: 27] Item of 1 to 3 words
                     System.out.print("Enter new interest keyword: ");
                     String interest = s.nextLine();
                     if(dl.insertStudentInterest(stuId, interest)) 
@@ -136,18 +176,26 @@ public class Presentation {
                         System.out.println("Failed to add interest.");
                     break;
                 case 2:
-                    //  Intersection of faculty abstracts/interests
                     System.out.print("Enter keyword to find Faculty: ");
                     String key = s.nextLine();
-                    System.out.println(dl.searchFacultyByKeyword(key));
+                    System.out.println(dl.searchFacultyMaster(key));
                     break;
-                case 3: break;
+                case 3:
+                    System.out.println("\n--- YOUR INTERESTS ---");
+                    System.out.println(dl.getStudentInterests(stuId));
+                    System.out.print("Enter interest to REMOVE (or press Enter to cancel): ");
+                    String rem = s.nextLine();
+                    if(!rem.trim().isEmpty()) {
+                        if(dl.removeStudentInterest(stuId, rem)) System.out.println("Removed.");
+                        else System.out.println("Could not remove (not found).");
+                    }
+                    break;
+                case 4: break;
                 default: System.out.println("Invalid.");
             }
-        } while (choice != 3);
+        } while (choice != 4);
     }
 
-    // [cite: 45] Guest Menu: Search intersection of all
     private static void guestFlow() {
         int choice;
         do {
