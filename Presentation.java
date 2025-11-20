@@ -45,8 +45,19 @@ public class Presentation {
 
     //  Faculty Menu: Insert abstracts, Search Students
     private static void facultyFlow() {
-        System.out.print("\nEnter Faculty ID (simulate login): ");
-        int facId = Integer.parseInt(s.nextLine()); 
+       System.out.print("\nEnter Faculty Username: ");
+        String user = s.nextLine();
+
+        System.out.print("Enter Password: ");
+        String pass = s.nextLine();
+
+        int facId = dl.loginFaculty(user, pass);
+
+        if (facId < 1) {
+            System.out.println("Login failed.");
+            return;
+}
+
 
         int choice;
         do {

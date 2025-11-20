@@ -1,6 +1,8 @@
 package ISTE330_Project;
 
 import java.sql.*;
+import java.security.MessageDigest;
+
 
 public class DataLayer {
      
@@ -37,6 +39,47 @@ public class DataLayer {
             System.out.println("Error closing connection: " + e.getMessage());
         }
     }
+
+    public static String hashPassword(String password) {
+    try {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] digest = md.digest(password.getBytes("UTF-8"));
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) sb.append(String.format("%02x", b));
+        return sb.toString();
+
+    } catch (Exception e) {
+        return null;
+    }
+}
+public int loginFaculty(String username, String password) {
+    String sql = "SELECT a.account_id, a.password, f.fac_id " +
+                 "FROM account a JOIN faculty f ON a.account_id = f.account_id " +
+                 "WHERE a.username = ?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, username);
+        ResultSet rs = ps.executeQuery();
+
+        if (!rs.next()) {
+            return -1;
+        }
+
+        String storedHash = rs.getString("password");
+        String entered = hashPassword(password);
+
+        if (!storedHash.equals(entered)) {
+            return -2; 
+        }
+
+        return rs.getInt("fac_id"); 
+
+    } catch (SQLException e) {
+        System.out.println("Login error: " + e.getMessage());
+        return -3;
+    }
+}
+
 
     // ==========================================
     // FACULTY METHODS
