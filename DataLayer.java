@@ -8,7 +8,6 @@
 //  - Mohamed Abdullah Najumudeen
 //  - Jake Paczkowski
 //  - Muzammilkhan Pathan
-package ISTE330_Project;
 
 import java.sql.*;
 import java.security.MessageDigest;
