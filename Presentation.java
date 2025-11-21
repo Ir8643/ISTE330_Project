@@ -76,6 +76,7 @@ public class Presentation {
             System.out.println("3. View/Edit My Abstracts");
             System.out.println("4. View/Edit My Interests");
             System.out.println("5. Return to Main Menu");
+            System.out.println("6. Auto-Match Students who share your interests");
             System.out.print("Enter choice: ");
             try { choice = Integer.parseInt(s.nextLine()); } catch (Exception e) { choice = -1; }
 
@@ -138,6 +139,10 @@ public class Presentation {
                     break;
                 case 5: break;
                 default: System.out.println("Invalid.");
+                case 6:
+                    System.out.println(dl.autoMatchStudentsForFaculty(facId));
+                break;
+
             }
         } while (choice != 5);
     }
@@ -163,6 +168,8 @@ public class Presentation {
             System.out.println("2. Search Faculty (Keywords/Abstracts/Interests)");
             System.out.println("3. View/Modify My Interests");
             System.out.println("4. Return to Main Menu");
+            System.out.println("5. Auto match Faculty who share your interests");
+
             System.out.print("Enter choice: ");
             try { choice = Integer.parseInt(s.nextLine()); } catch (Exception e) { choice = -1; }
 
@@ -192,6 +199,10 @@ public class Presentation {
                     break;
                 case 4: break;
                 default: System.out.println("Invalid.");
+                case 5:
+                    System.out.println(dl.autoMatchFacultyForStudent(stuId));
+                break;
+
             }
         } while (choice != 4);
     }
@@ -202,6 +213,7 @@ public class Presentation {
             System.out.println("\n--- GUEST MENU ---");
             System.out.println("1. Search Database (Students & Faculty)");
             System.out.println("2. Return to Main Menu");
+            System.out.println("3. Auto-Match Faculty & Students (combined)");
             System.out.print("Enter choice: ");
             try { choice = Integer.parseInt(s.nextLine()); } catch (Exception e) { choice = -1; }
 
@@ -213,6 +225,10 @@ public class Presentation {
                     break;
                 case 2: break;
                 default: System.out.println("Invalid.");
+                case 3:
+                    System.out.println(dl.autoMatchGuest());
+                break;
+
             }
         } while (choice != 2);
     }

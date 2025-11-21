@@ -253,6 +253,43 @@ public class DataLayer {
         return removeInterestGeneric(facId, keyword, true);
     }
 
+    public String autoMatchStudentsForFaculty(int facId) {
+    String sql =
+        "SELECT DISTINCT s.fname, s.lname, s.email, s.program, i.keyword " +
+        "FROM faculty_interest fi " +
+        "JOIN interests i ON fi.interest_id = i.interest_id " +
+        "JOIN student_interests si ON si.interest_id = i.interest_id " +
+        "JOIN student s ON s.stu_id = si.stu_id " +
+        "WHERE fi.fac_id = ?";
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("=== Students Matching Your Interests ===\n");
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, facId);
+        ResultSet rs = ps.executeQuery();
+
+        boolean found = false;
+        while (rs.next()) {
+            found = true;
+
+            sb.append(rs.getString("fname")).append(" ").append(rs.getString("lname")).append("\n")
+              .append("Email: ").append(rs.getString("email")).append("\n")
+              .append("Program: ").append(rs.getString("program")).append("\n")
+              .append("Matched Interest: ").append(rs.getString("keyword")).append("\n")
+              .append("-------------------------------------------\n");
+        }
+
+        if (!found) return "No matching students found.";
+
+    } catch (SQLException e) {
+        return "DB Error: " + e.getMessage();
+    }
+
+    return sb.toString();
+}
+
+
     // ==========================================
     // STUDENT METHODS
     // ==========================================
@@ -311,6 +348,42 @@ public class DataLayer {
     public boolean removeStudentInterest(int stuId, String keyword) {
         return removeInterestGeneric(stuId, keyword, false);
     }
+
+    public String autoMatchFacultyForStudent(int stuId) {
+    String sql = 
+        "SELECT DISTINCT f.fname, f.lname, f.email, f.building_no, f.officer_no, i.keyword " +
+        "FROM student_interests si " +
+        "JOIN interests i ON si.interest_id = i.interest_id " +
+        "JOIN faculty_interest fi ON fi.interest_id = i.interest_id " +
+        "JOIN faculty f ON f.fac_id = fi.fac_id " +
+        "WHERE si.stu_id = ?";
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("=== Faculty Matching Your Interests ===\n");
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, stuId);
+        ResultSet rs = ps.executeQuery();
+
+        boolean found = false;
+        while (rs.next()) {
+            found = true;
+            sb.append(rs.getString("fname")).append(" ").append(rs.getString("lname")).append("\n")
+              .append("Email: ").append(rs.getString("email")).append("\n")
+              .append("Building: ").append(rs.getInt("building_no"))
+              .append("  Office: ").append(rs.getInt("officer_no")).append("\n")
+              .append("Matched Interest: ").append(rs.getString("keyword")).append("\n")
+              .append("-------------------------------------------\n");
+        }
+
+        if (!found) return "No matching faculty found.";
+
+    } catch (SQLException e) {
+        return "DB Error: " + e.getMessage();
+    }
+
+    return sb.toString();
+}
 
     // ==========================================
     // SHARED / HELPER METHODS
@@ -457,4 +530,13 @@ public class DataLayer {
         sb.append(searchStudentsByInterest(keyword)); 
         return sb.toString();
     }
+    public String autoMatchGuest() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("=== FACULTY MATCHES ===\n");
+    sb.append(searchFacultyMaster("")); 
+    sb.append("\n\n=== STUDENT MATCHES ===\n");
+    sb.append(searchStudentsByInterest(""));
+    return sb.toString();
+}
+
 }
